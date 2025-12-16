@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { Send, Loader2, LogOut, User, Edit, Trash2, ChevronDown } from 'lucide-react';
+import { Send, Loader2, LogOut, User, Edit, Trash2, ChevronDown, Menu, X } from 'lucide-react';
 import { ChatMessage } from './components/ChatMessage';
 import { Sidebar } from './components/Sidebar';
 import { supabase } from './lib/supabase';
@@ -23,6 +23,7 @@ function ChatInterface() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [sessionId, setSessionId] = useState(uuidv4());
@@ -513,36 +514,67 @@ function ChatInterface() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar
-        sessions={sessions}
-        currentSessionId={sessionId}
-        onNewChat={handleNewChat}
-        onSelectSession={handleSelectSession}
-        onDeleteSession={handleDeleteSession}
-        onRenameSession={handleRenameSession}
-      />
+    <div className="flex h-screen bg-gray-100 relative">
+      {/* Mobile Sidebar Overlay */}
+      {isMobileSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsMobileSidebarOpen(false)}
+        />
+      )}
       
-      <div className="flex flex-col flex-1">
-        <div className="bg-white border-b px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800">Course Guider Agent</h1>
-          <div className="flex items-center gap-4">
+      {/* Sidebar - Hidden on mobile, slide in when open */}
+      <div className={`
+        fixed lg:relative inset-y-0 left-0 z-50 lg:z-auto
+        transform lg:transform-none transition-transform duration-300 ease-in-out
+        ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        <Sidebar
+          sessions={sessions}
+          currentSessionId={sessionId}
+          onNewChat={() => {
+            handleNewChat();
+            setIsMobileSidebarOpen(false);
+          }}
+          onSelectSession={(id) => {
+            handleSelectSession(id);
+            setIsMobileSidebarOpen(false);
+          }}
+          onDeleteSession={handleDeleteSession}
+          onRenameSession={handleRenameSession}
+          onCloseMobile={() => setIsMobileSidebarOpen(false)}
+        />
+      </div>
+      
+      <div className="flex flex-col flex-1 w-full lg:w-auto">
+        <div className="bg-white border-b px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileSidebarOpen(true)}
+              className="lg:hidden p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 truncate">Course Guider Agent</h1>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-4">
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800 focus:outline-none"
+                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-600 hover:text-gray-800 focus:outline-none"
               >
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <User className="w-4 h-4 text-white" />
                 </div>
-                <span className="font-medium">
+                <span className="font-medium hidden sm:inline truncate max-w-[100px] md:max-w-[150px]">
                   {user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'}
                 </span>
                 <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-1 z-50">
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-1 z-50 max-w-[90vw]">
                   <button
                     onClick={() => {
                       navigate('/profile');
@@ -593,7 +625,7 @@ function ChatInterface() {
             </div>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
           {messages.map((message) => (
             <ChatMessage key={message.id} message={message} />
           ))}
@@ -606,20 +638,20 @@ function ChatInterface() {
           <div ref={messagesEndRef} />
         </div>
         
-        <form onSubmit={handleSubmit} className="p-4 bg-white border-t">
-          <div className="flex gap-4">
+        <form onSubmit={handleSubmit} className="p-3 sm:p-4 bg-white border-t">
+          <div className="flex gap-2 sm:gap-4">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 p-2 text-sm sm:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={isLoading}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 sm:px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />

@@ -94,18 +94,18 @@ export function EnhancedSignup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#181824] via-[#23243a] to-[#181824] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-[#23243a]/80 rounded-xl shadow-xl p-8 border border-[#23243a]/40">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#181824] via-[#23243a] to-[#181824] py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8 bg-[#23243a]/80 rounded-xl shadow-xl p-6 sm:p-8 border border-[#23243a]/40">
         <div>
           <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-green-900/30">
             <svg className="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
           </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
+          <h2 className="mt-4 sm:mt-6 text-center text-2xl sm:text-3xl font-extrabold text-white">
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-green-200">
+          <p className="mt-2 text-center text-xs sm:text-sm text-green-200">
             Or{' '}
             <Link to="/login" className="font-medium text-green-400 hover:text-green-300">
               sign in to your existing account
@@ -113,7 +113,7 @@ export function EnhancedSignup() {
           </p>
         </div>
         
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-6 sm:mt-8 space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
           {/* Email Field */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-green-100 mb-2">
@@ -127,7 +127,7 @@ export function EnhancedSignup() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="appearance-none relative block w-full px-3 py-2 border border-[#353657] bg-[#181824] placeholder:text-green-200/60 text-green-100 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+              className="appearance-none relative block w-full px-3 py-2 border border-[#353657] bg-[#181824] placeholder:text-green-200/60 text-green-100 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 text-sm sm:text-base"
               placeholder="Enter your email"
             />
           </div>
@@ -146,7 +146,7 @@ export function EnhancedSignup() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 pr-10 border border-[#353657] bg-[#181824] placeholder:text-green-200/60 text-green-100 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                className="appearance-none relative block w-full px-3 py-2 pr-10 border border-[#353657] bg-[#181824] placeholder:text-green-200/60 text-green-100 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 text-sm sm:text-base"
                 placeholder="Create a password"
               />
               <button
@@ -164,7 +164,7 @@ export function EnhancedSignup() {
 
             {/* Password Strength Indicator */}
             {password && (
-              <div className="mt-3">
+              <div className="mt-2 sm:mt-3">
                 {/* Strength Progress Bar */}
                 <div
                   className="bg-gray-700 h-1 w-full overflow-hidden rounded-full mb-3"
@@ -228,7 +228,7 @@ export function EnhancedSignup() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 pr-10 border border-[#353657] bg-[#181824] placeholder:text-green-200/60 text-green-100 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                className="appearance-none relative block w-full px-3 py-2 pr-10 border border-[#353657] bg-[#181824] placeholder:text-green-200/60 text-green-100 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 text-sm sm:text-base"
                 placeholder="Confirm your password"
               />
               <button
@@ -275,7 +275,7 @@ export function EnhancedSignup() {
             <button
               type="submit"
               disabled={loading || strengthScore < 4 || password !== confirmPassword}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg shadow-green-900/10"
+              className="group relative w-full flex justify-center py-2.5 sm:py-2 px-4 border border-transparent text-sm sm:text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg shadow-green-900/10"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
